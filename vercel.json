@@ -3,29 +3,6 @@
     {
       "source": "/functions/v1/zap-scan",
       "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
-    },
-    {
-      "source": "/functions/v1/zap-scan/:path*",
-      "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan/:path*"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/functions/v1/zap-scan",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
     }
   ]
 } 
