@@ -5,11 +5,4 @@
       "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
     }
   ]
-} {
-  "rewrites": [
-    {
-      "source": "/functions/v1/zap-scan",
-      "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
-    }
-  ]
 } 
