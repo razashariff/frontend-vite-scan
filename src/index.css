@@ -1,0 +1,99 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 14% 10%;
+    --foreground: 220 10% 98%;
+
+    --card: 220 14% 12%;
+    --card-foreground: 220 10% 98%;
+
+    --popover: 220 14% 12%;
+    --popover-foreground: 220 10% 98%;
+
+    --primary: 220 70% 50%;
+    --primary-foreground: 220 10% 98%;
+
+    --secondary: 220 14% 16%;
+    --secondary-foreground: 220 10% 98%;
+
+    --muted: 220 14% 16%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 220 14% 16%;
+    --accent-foreground: 220 10% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 14% 20%;
+    --input: 220 14% 16%;
+    --ring: 220 70% 50%;
+
+    --radius: 0.5rem;
+
+    /* Severity colors */
+    --severity-high: 0 84% 60%;
+    --severity-medium: 35 98% 50%; 
+    --severity-low: 65 90% 45%;
+    --severity-info: 220 70% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.scan-results h2 {
+  @apply text-xl font-semibold mb-2 mt-4;
+}
+
+.scan-results h3 {
+  @apply text-lg font-medium mb-2 mt-3;
+}
+
+.scan-results p {
+  @apply my-2;
+}
+
+.scan-results ul {
+  @apply list-disc list-inside my-2 ml-4;
+}
+
+.scan-results code {
+  @apply bg-secondary/50 px-1 py-0.5 rounded text-sm;
+}
+
+.scan-results table {
+  @apply w-full border-collapse my-4;
+}
+
+.scan-results th, .scan-results td {
+  @apply border border-border py-2 px-3 text-left;
+}
+
+.scan-results th {
+  @apply bg-secondary/50;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
