@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { uploadScanResults } from '../lib/api';
 import Layout from '../components/Layout';
+import { supabase } from '../lib/supabase';
 
 const Dashboard = () => {
   const [url, setUrl] = useState('');
@@ -55,12 +56,17 @@ const Dashboard = () => {
         description: `Scanning ${url}`,
       });
 
+      const session = await supabase.auth.getSession();
+      if (!session.data.session?.access_token) {
+        throw new Error('No access token available');
+      }
+
       const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${user.access_token}`
+          'Authorization': `Bearer ${session.data.session.access_token}`
         },
         body: JSON.stringify({ 
           url: url,

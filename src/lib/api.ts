@@ -50,12 +50,17 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
     console.log('Starting ZAP scan for URL:', targetUrl);
     
     // Call the ZAP API endpoint with additional error handling
+    const session = await supabase.auth.getSession();
+    if (!session.data.session?.access_token) {
+      throw new Error('No access token available');
+    }
+
     const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
+        'Authorization': `Bearer ${session.data.session.access_token}`
       },
       body: JSON.stringify({
         url: targetUrl,
@@ -93,12 +98,17 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
 // Function to get scan status - might not be needed if your ZAP API returns results immediately
 export async function getScanStatus(scanId: string) {
   try {
+    const session = await supabase.auth.getSession();
+    if (!session.data.session?.access_token) {
+      throw new Error('No access token available');
+    }
+
     const response = await fetch(`https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan/${scanId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
+        'Authorization': `Bearer ${session.data.session.access_token}`
       }
     });
     if (!response.ok) {
