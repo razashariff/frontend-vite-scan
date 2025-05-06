@@ -50,14 +50,16 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
     console.log('Starting ZAP scan for URL:', targetUrl);
     
     // Call the ZAP API endpoint with additional error handling
-    const response = await fetch('https://zap-scanner-211605900220.europe-west2.run.app/scan', {
+    const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
       },
       body: JSON.stringify({
         url: targetUrl,
+        scanType: 'full'
       }),
       mode: 'cors', // Explicitly set CORS mode
       cache: 'no-cache', // Don't use cached results
