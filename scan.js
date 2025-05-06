@@ -13,7 +13,7 @@ async function scan() {
 
   try {
     // Call the local proxy server
-    const response = await fetch('http://localhost:8081/api/scan', {
+    const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

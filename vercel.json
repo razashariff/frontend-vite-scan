@@ -11,5 +11,30 @@
       "src": "/functions/v1/zap-scan",
       "dest": "/api/zap-scan.js"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/scan",
+      "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/scan",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
   ]
 } 

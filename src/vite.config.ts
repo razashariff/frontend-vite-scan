@@ -14,11 +14,11 @@ export default defineConfig({
     port: 8080,
     host: true,
     proxy: {
-      '/api': {
-        target: 'https://zap-scanner-211605900220.europe-west2.run.app',
+      '/scan': {
+        target: 'https://jjdzrxfriezvfxjacche.supabase.co/functions/v1',
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: true,
+        rewrite: (path) => path.replace(/^\/scan/, '/zap-scan'),
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.log('proxy error', err);
