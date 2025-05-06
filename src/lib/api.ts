@@ -68,8 +68,7 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       body: JSON.stringify({
         url: targetUrl,
         scanType: 'full'
-      }),
-      signal: controller.signal
+      })
     });
 
     clearTimeout(timeoutId);
@@ -81,7 +80,7 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
     }
 
     const scanData = await response.json();
-    console.log('Scan data received:', scanData);
+    console.log('Scan started:', scanData);
     
     // Generate a scan ID if one isn't provided by the ZAP API
     const scanId = scanData.scanId || `scan-${Date.now()}`;
@@ -90,7 +89,7 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
     const { filePath } = await uploadScanResults(scanId, scanData, userId, targetUrl);
     console.log('Scan results saved to:', filePath);
     
-    // Return the scan results
+    // Return the scan ID and status
     return { 
       scanId, 
       data: scanData 

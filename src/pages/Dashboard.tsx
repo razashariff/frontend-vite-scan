@@ -61,9 +61,6 @@ const Dashboard = () => {
         throw new Error('No access token available');
       }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
       const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
         method: 'POST',
         headers: {
@@ -74,35 +71,28 @@ const Dashboard = () => {
         body: JSON.stringify({ 
           url: url,
           scanType: 'full'
-        }),
-        signal: controller.signal
+        })
       });
-
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Scan failed: ${await response.text()}`);
       }
 
       const result = await response.json();
-      const scanId = `scan-${Date.now()}`;
       
-      // Save scan results to Supabase
-      const { filePath } = await uploadScanResults(scanId, result, user.id, url);
-      console.log('Scan results saved to:', filePath);
-      
+      // Navigate to scan results page with pending status
       navigate('/scan-results', { 
         state: { 
-          scanId: scanId,
-          results: result,
+          scanId: result.scanId,
+          status: 'pending',
           url: url,
           timestamp: new Date().toISOString(),
         } 
       });
       
       toast({
-        title: 'Scan Complete',
-        description: 'Vulnerability scan completed successfully',
+        title: 'Scan Started',
+        description: 'The scan is running in the background. You will be notified when it completes.',
       });
 
     } catch (error) {
