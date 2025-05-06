@@ -55,7 +55,7 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       throw new Error('No access token available');
     }
 
-    const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
+    const response = await fetch('/api/scan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
