@@ -1,17 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/scan",
-      "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
-    },
-    {
-      "source": "/api/zap-scan",
-      "destination": "/api/zap-scan.js"
-    }
-  ],
   "headers": [
     {
-      "source": "/scan",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -23,7 +13,7 @@
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
+          "value": "Content-Type, Authorization, Accept"
         }
       ]
     }
