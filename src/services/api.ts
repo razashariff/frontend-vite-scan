@@ -1,2 +1,0 @@
-const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
-const response = await fetch(`https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan/${scanId}`, { 

@@ -60,9 +60,7 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       body: JSON.stringify({
         url: targetUrl,
         scanType: 'full'
-      }),
-      mode: 'cors', // Explicitly set CORS mode
-      cache: 'no-cache', // Don't use cached results
+      })
     });
 
     if (!response.ok) {
@@ -95,7 +93,14 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
 // Function to get scan status - might not be needed if your ZAP API returns results immediately
 export async function getScanStatus(scanId: string) {
   try {
-    const response = await fetch(`/api/scan/${scanId}/status`);
+    const response = await fetch(`https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan/${scanId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${supabase.auth.session()?.access_token}`
+      }
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch scan status');
     }
