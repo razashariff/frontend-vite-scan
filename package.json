@@ -1,3 +1,9 @@
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "start": "vite preview"
+}
 {
   "name": "web-watchdog-guardian-scan-main",
   "version": "1.0.0",
