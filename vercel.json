@@ -5,9 +5,6 @@
       "destination": "/api/:path*"
     }
   ],
-  "env": {
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key"
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -27,4 +24,4 @@
       ]
     }
   ]
-} 
+}
