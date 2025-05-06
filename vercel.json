@@ -1,27 +1,15 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/functions/v1/zap-scan",
-      "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
+      "src": "api/zap-scan.js",
+      "use": "@vercel/node"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/functions/v1/zap-scan",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
+      "src": "/functions/v1/zap-scan",
+      "dest": "/api/zap-scan.js"
     }
   ]
 } 
