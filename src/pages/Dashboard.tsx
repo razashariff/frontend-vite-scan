@@ -51,17 +51,45 @@ const Dashboard = () => {
     setIsScanning(true);
     
     try {
-      toast({
-        title: 'Scan Started',
-        description: `Scanning ${url}`,
-      });
-
       const session = await supabase.auth.getSession();
       if (!session.data.session?.access_token) {
         throw new Error('No access token available');
       }
 
-      const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
+      // Create scan record first
+      const scanId = `scan-${Date.now()}`;
+      const { error: dbError } = await supabase
+        .from('scans')
+        .insert({
+          id: scanId,
+          user_id: user.id,
+          url: url,
+          scan_type: 'full',
+          status: 'pending',
+          created_at: new Date().toISOString()
+        });
+
+      if (dbError) {
+        throw new Error(`Failed to create scan record: ${dbError.message}`);
+      }
+
+      // Navigate to results page immediately
+      navigate('/scan-results', { 
+        state: { 
+          scanId: scanId,
+          status: 'pending',
+          url: url,
+          timestamp: new Date().toISOString(),
+        } 
+      });
+      
+      toast({
+        title: 'Scan Started',
+        description: 'The scan is running in the background. You will be notified when it completes.',
+      });
+
+      // Start the scan in the background
+      fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,46 +100,9 @@ const Dashboard = () => {
           url: url,
           scanType: 'full'
         })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        // If it's a timeout, we'll treat it as a success since the scan is still running
-        if (response.status === 504) {
-          const scanId = `scan-${Date.now()}`;
-          navigate('/scan-results', { 
-            state: { 
-              scanId: scanId,
-              status: 'pending',
-              url: url,
-              timestamp: new Date().toISOString(),
-            } 
-          });
-          
-          toast({
-            title: 'Scan Started',
-            description: 'The scan is running in the background. You will be notified when it completes.',
-          });
-          return;
-        }
-        throw new Error(`Scan failed: ${errorText}`);
-      }
-
-      const result = await response.json();
-      
-      // Navigate to scan results page with pending status
-      navigate('/scan-results', { 
-        state: { 
-          scanId: result.scanId,
-          status: 'pending',
-          url: url,
-          timestamp: new Date().toISOString(),
-        } 
-      });
-      
-      toast({
-        title: 'Scan Started',
-        description: 'The scan is running in the background. You will be notified when it completes.',
+      }).catch(error => {
+        console.error('Background scan error:', error);
+        // Don't show error to user since we've already navigated to results
       });
 
     } catch (error) {
