@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { uploadScanResults } from '../lib/api';
 import Layout from '../components/Layout';
 import { supabase } from '../lib/supabase';
+import { startZapScan } from '../lib/api';
 
 const Dashboard = () => {
   const [url, setUrl] = useState('');
@@ -51,32 +52,17 @@ const Dashboard = () => {
     setIsScanning(true);
     
     try {
-      const session = await supabase.auth.getSession();
-      if (!session.data.session?.access_token) {
-        throw new Error('No access token available');
-      }
+      toast({
+        title: 'Scan Started',
+        description: `Scanning ${url}`,
+      });
 
-      // Create scan record first
-      const scanId = `scan-${Date.now()}`;
-      const { error: dbError } = await supabase
-        .from('scans')
-        .insert({
-          id: scanId,
-          user_id: user.id,
-          url: url,
-          scan_type: 'full',
-          status: 'pending',
-          created_at: new Date().toISOString()
-        });
-
-      if (dbError) {
-        throw new Error(`Failed to create scan record: ${dbError.message}`);
-      }
-
-      // Navigate to results page immediately
+      const result = await startZapScan(url, user.id);
+      
+      // Navigate to scan results page with pending status
       navigate('/scan-results', { 
         state: { 
-          scanId: scanId,
+          scanId: result.scanId,
           status: 'pending',
           url: url,
           timestamp: new Date().toISOString(),
@@ -86,23 +72,6 @@ const Dashboard = () => {
       toast({
         title: 'Scan Started',
         description: 'The scan is running in the background. You will be notified when it completes.',
-      });
-
-      // Start the scan in the background
-      fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${session.data.session.access_token}`
-        },
-        body: JSON.stringify({ 
-          url: url,
-          scanType: 'full'
-        })
-      }).catch(error => {
-        console.error('Background scan error:', error);
-        // Don't show error to user since we've already navigated to results
       });
 
     } catch (error) {

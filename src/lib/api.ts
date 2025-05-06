@@ -55,9 +55,6 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       throw new Error('No access token available');
     }
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
     const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
       method: 'POST',
       headers: {
@@ -71,19 +68,8 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       })
     });
 
-    clearTimeout(timeoutId);
-
     if (!response.ok) {
       const errorText = await response.text();
-      // If it's a timeout, we'll treat it as a success since the scan is still running
-      if (response.status === 504) {
-        const scanId = `scan-${Date.now()}`;
-        return { 
-          scanId, 
-          status: 'pending',
-          url: targetUrl
-        };
-      }
       console.error('ZAP API returned an error response:', response.status, errorText);
       throw new Error(`API error: ${response.status} - ${errorText || 'No error details available'}`);
     }
@@ -91,17 +77,11 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
     const scanData = await response.json();
     console.log('Scan started:', scanData);
     
-    // Generate a scan ID if one isn't provided by the ZAP API
-    const scanId = scanData.scanId || `scan-${Date.now()}`;
-    
-    // Store the scan results in Supabase
-    const { filePath } = await uploadScanResults(scanId, scanData, userId, targetUrl);
-    console.log('Scan results saved to:', filePath);
-    
     // Return the scan ID and status
     return { 
-      scanId, 
-      data: scanData 
+      scanId: scanData.scanId, 
+      status: scanData.status,
+      url: targetUrl
     };
   } catch (error) {
     console.error('Error starting ZAP scan:', error);
