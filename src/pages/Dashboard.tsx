@@ -55,16 +55,16 @@ const Dashboard = () => {
         description: `Scanning ${url}`,
       });
 
-      const response = await fetch('/scan', {
+      const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${user.access_token}`
         },
         body: JSON.stringify({ 
           url: url,
-          scanType: 'full',
-          recursive: true
+          scanType: 'full'
         })
       });
 
