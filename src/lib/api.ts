@@ -55,6 +55,9 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       throw new Error('No access token available');
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
     const response = await fetch('https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan', {
       method: 'POST',
       headers: {
@@ -65,8 +68,11 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
       body: JSON.stringify({
         url: targetUrl,
         scanType: 'full'
-      })
+      }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
