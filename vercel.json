@@ -1,21 +1,12 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/zap-scan.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/functions/v1/zap-scan",
-      "dest": "/api/zap-scan.js"
-    }
-  ],
   "rewrites": [
     {
       "source": "/scan",
       "destination": "https://jjdzrxfriezvfxjacche.supabase.co/functions/v1/zap-scan"
+    },
+    {
+      "source": "/api/zap-scan",
+      "destination": "/api/zap-scan.js"
     }
   ],
   "headers": [
