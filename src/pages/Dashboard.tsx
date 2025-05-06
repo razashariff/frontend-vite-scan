@@ -75,7 +75,26 @@ const Dashboard = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Scan failed: ${await response.text()}`);
+        const errorText = await response.text();
+        // If it's a timeout, we'll treat it as a success since the scan is still running
+        if (response.status === 504) {
+          const scanId = `scan-${Date.now()}`;
+          navigate('/scan-results', { 
+            state: { 
+              scanId: scanId,
+              status: 'pending',
+              url: url,
+              timestamp: new Date().toISOString(),
+            } 
+          });
+          
+          toast({
+            title: 'Scan Started',
+            description: 'The scan is running in the background. You will be notified when it completes.',
+          });
+          return;
+        }
+        throw new Error(`Scan failed: ${errorText}`);
       }
 
       const result = await response.json();

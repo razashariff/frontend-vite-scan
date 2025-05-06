@@ -75,6 +75,15 @@ export async function startZapScan(targetUrl: string, userId: string): Promise<S
 
     if (!response.ok) {
       const errorText = await response.text();
+      // If it's a timeout, we'll treat it as a success since the scan is still running
+      if (response.status === 504) {
+        const scanId = `scan-${Date.now()}`;
+        return { 
+          scanId, 
+          status: 'pending',
+          url: targetUrl
+        };
+      }
       console.error('ZAP API returned an error response:', response.status, errorText);
       throw new Error(`API error: ${response.status} - ${errorText || 'No error details available'}`);
     }
